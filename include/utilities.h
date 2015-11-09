@@ -119,4 +119,15 @@ namespace plotIt {
     }
 
   void setRange(TObject* object, Plot& plot, bool onlyX = false);
+
+  template<class T> void removeNegativeBins(T* object) {
+      for (size_t i = 0; i <= (size_t) object->GetNbinsX() + 1; i++) {
+          float content = object->GetBinContent(i);
+          if (content < 0) {
+            object->SetBinContent(i, 0);
+            if (object->GetSumw2N() > 0)
+                object->SetBinError(i, 0);
+          }
+      }
+  }
 }

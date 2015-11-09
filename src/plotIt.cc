@@ -214,6 +214,9 @@ namespace plotIt {
       m_config.errors_type = Poisson;
       if (node["errors-type"])
           m_config.errors_type = string_to_errors_type(node["errors-type"].as<std::string>());
+
+      if (node["ignore-negative-bins"])
+          m_config.ignore_negative_bins = node["ignore-negative-bins"].as<bool>();
     }
 
     // Database
@@ -497,6 +500,10 @@ namespace plotIt {
         plot.errors_type = string_to_errors_type(node["errors-type"].as<std::string>());
       else
         plot.errors_type = m_config.errors_type;
+
+      plot.ignore_negative_bins = m_config.ignore_negative_bins;
+      if (node["ignore-negative-bins"])
+        plot.ignore_negative_bins = node["ignore-negative-bins"].as<bool>();
 
       if (node["binning-x"])
         plot.binning_x = node["binning-x"].as<uint16_t>();

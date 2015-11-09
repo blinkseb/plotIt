@@ -227,6 +227,7 @@ namespace plotIt {
 
     bool show_errors;
     bool show_overflow = false;
+    bool ignore_negative_bins = false;
 
     std::string inherits_from;
 
@@ -293,6 +294,7 @@ namespace plotIt {
 
     bool ignore_scales = false;
     bool show_overflow = false;
+    bool ignore_negative_bins = false;
 
     std::string mode = "hist"; // "tree" or "hist"
     std::string tree_name;

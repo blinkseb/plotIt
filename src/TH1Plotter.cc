@@ -95,11 +95,19 @@ namespace plotIt {
         addOverflow(h, file.type, plot);
       }
 
+      if (plot.ignore_negative_bins) {
+        removeNegativeBins(h);
+      }
+
       for (Systematic& s: file.systematics) {
         TH1* syst = static_cast<TH1*>(s.object);
         syst->Rebin(plot.rebin);
         if (plot.show_overflow) {
           addOverflow(syst, file.type, plot);
+        }
+
+        if (plot.ignore_negative_bins) {
+          removeNegativeBins(syst);
         }
       }
     }
