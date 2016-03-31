@@ -6,7 +6,7 @@
 
 namespace YAML {
     class Node;
-};
+}
 
 class TH1;
 class TObject;
@@ -109,4 +109,4 @@ namespace plotIt {
     };
 
     using SystematicPtr = std::shared_ptr<Systematic>;
-};
+}

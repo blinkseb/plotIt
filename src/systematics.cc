@@ -224,4 +224,4 @@ namespace plotIt {
 
         throw std::invalid_argument("Unknown systematic type: " + type);
     }
-};
+}

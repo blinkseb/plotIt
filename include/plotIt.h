@@ -88,4 +88,4 @@ namespace plotIt {
       Legend m_legend;
       Configuration m_config;
   };
-};
+}
