@@ -1,45 +1,94 @@
-os:
-- linux
+# Use new trusty images, should yield newer compilers and packages
+sudo: required
+dist: trusty
 language: cpp
-compiler:
-- gcc
-env:
-- ROOT_VERSION=6.06.00
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - kalakris-cmake
-    - boost-latest
-    packages:
-    - gcc-4.9
-    - g++-4.9
-    - git
-    - make
-    - uuid-dev
-    - libboost1.55-dev
-    - libboost-filesystem1.55-dev
-    - libboost-regex1.55-dev
-    - libboost-system1.55-dev
+
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+            - uuid-dev
+            - libboost1.55-dev
+            - libboost-filesystem1.55-dev
+            - libboost-regex1.55-dev
+            - libboost-system1.55-dev
+      env:
+        - COMPILER=g++-4.9
+        - ROOT_VERSION=6.06.02
+    #- compiler: gcc
+      #addons:
+        #apt:
+          #sources:
+            #- ubuntu-toolchain-r-test
+          #packages:
+            #- g++-5
+            #- uuid-dev
+            #- libboost1.55-dev
+            #- libboost-filesystem1.55-dev
+            #- libboost-regex1.55-dev
+            #- libboost-system1.55-dev
+      #env:
+        #- COMPILER=g++-5
+        #- ROOT_VERSION=6.06.00
+    #- compiler: clang
+      #addons:
+        #apt:
+          #sources:
+            #- ubuntu-toolchain-r-test
+            #- llvm-toolchain-trusty-3.7
+          #packages:
+            #- clang-3.7
+            #- uuid-dev
+            #- libboost1.55-dev
+            #- libboost-filesystem1.55-dev
+            #- libboost-regex1.55-dev
+            #- libboost-system1.55-dev
+      #env:
+        #- COMPILER=clang++-3.7
+        #- ROOT_VERSION=6.06.00
+    #- compiler: clang
+      #addons:
+        #apt:
+          #sources:
+            #- ubuntu-toolchain-r-test
+            #- llvm-toolchain-trusty-3.8
+          #packages:
+            #- clang-3.8
+            #- uuid-dev
+            #- libboost1.55-dev
+            #- libboost-filesystem1.55-dev
+            #- libboost-regex1.55-dev
+            #- libboost-system1.55-dev
+      #env:
+        #- COMPILER=clang++-3.8
+        #- ROOT_VERSION=6.06.00
+
 install:
-- export CXX=g++-4.9
-- export CC=gcc-4.9
-- export PATH=$HOME/.local/bin:$PATH
-- pip install --user pyyaml requests
-- wget http://sbrochet.web.cern.ch/sbrochet/public/ROOT-${ROOT_VERSION}_Python-2.7_Ubuntu-12.04_gcc4.9.tar.xz
-- mkdir root
-- cd root
-- tar xf ../ROOT-${ROOT_VERSION}_Python-2.7_Ubuntu-12.04_gcc4.9.tar.xz
-- source bin/thisroot.sh
-- cd ..
+  - export CXX=$COMPILER
+  - export PATH=$HOME/.local/bin:$PATH
+  - pip install --user pyyaml requests
+  - ROOT_BUNDLE=ROOT-${ROOT_VERSION}_Python-2.7_gcc-4.9.3_Ubuntu_14.04_x86_64
+  - wget http://sbrochet.web.cern.ch/sbrochet/public/${ROOT_BUNDLE}.tar.gz
+  - mkdir root
+  - cd root
+  - tar xf ../${ROOT_BUNDLE}.tar.gz
+  - source ${ROOT_BUNDLE}/bin/thisroot.sh
+  - cd ..
+
 before_script:
-- export CXX=g++-4.9
-- export CC=gcc-4.9
-- cd external
-- "./build-external.sh"
-- cd ..
+  - export CXX=$COMPILER
+  - cd external
+  - "./build-external.sh"
+  - cd ..
+
 script:
-- make -j2 && cd test && ./run_tests.sh
+  - make -j2 && cd test && ./run_tests.sh
+
 notifications:
   slack:
     secure: iEbTqLFRX/dR/h9FMcn/UmS3dBrKwsUJqnAz3Q2c4tAMkg7bFf3TFitdtzdEKgaqkxuTOCwDalosyW3NGE88M0x4VEIu2SAfEAPkvV2MGAz+4m+UswsibSubw0jBsHvAJQ3QkZ7fifjX9mmefoPVXyJiOR2b9gQu/2i961FQIn07nqJZ3vokhh3EnHNpGODj1tYRRFCtpFCvj8hDLHLZQeetaabnyTjDNkVxtkrHtGU8H7akQv68YPjc5DklmuZ3AAfY+xxtsRBe1zH8uN/8SpFPWoAeE4Dai4OWE2JLgzgGVYEzN6x+mvDRNBZjv/9E5+PH+OTb1DpiDHCW+L9Ns1vMz1tBvVyq0yu1RwW4UwNTbEAkzDzBl47RLQ2l+sILT9qHTtkmUjzgVvDqSMhhY5b3er457sWwPlaHJC8aRz7nw7+jniDB5+mgFq/7mPoZTmkTs9gjrw2MOAGNda8WRRa24K1Khol+ColcCooDwt87i3WEK/y9Y1aHXGqP6R2s3+C/Ix+F2VMQmFb41KXAbdOVQYdVmGpfTxh7riP326KRQjU9Y+j2GfMvEWAs3NzucY7IbjabTwRbbAnFy3X+7hnFk5JgW12Q/X0o7hbgbJPWZ35rBaySgiSxf3WavWfim2zUIMIAQgXvq6UE3Ot6B2E8/weobsuDpfvpx7iH3W0=
