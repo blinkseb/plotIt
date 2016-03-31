@@ -688,7 +688,7 @@ namespace plotIt {
   }
 
   void plotIt::fillLegend(TLegend& legend, const Plot& plot, bool with_uncertainties) {
-      std::vector<LegendEntry> legend_entries[plot.legend_columns];
+      std::vector<std::vector<LegendEntry>> legend_entries(plot.legend_columns);
 
       auto getLegendEntryFromFile = [&](File& file, LegendEntry& entry) {
           if (file.legend_group.length() > 0 && m_legend_groups.count(file.legend_group) && m_legend_groups[file.legend_group].plot_style->legend.length() > 0) {
